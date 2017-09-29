@@ -1,0 +1,19 @@
+--- s3_srvr.c	2017-05-25 14:54:38.000000000 +0200
++++ openssl-1.0.2l/ssl/s3_srvr.c	2017-09-29 00:13:46.264789762 +0200
+@@ -2272,7 +2272,15 @@
+             goto err;
+         decrypt_len =
+             RSA_private_decrypt((int)n, p, p, rsa, RSA_PKCS1_PADDING);
+-        ERR_clear_error();
++//        ERR_clear_error();
++        
++        
++        if (ERR_get_error() != SSL_ERROR_NONE) {
++            al = SSL_AD_HANDSHAKE_FAILURE;
++            SSLerr(SSL_F_SSL3_GET_CLIENT_KEY_EXCHANGE,
++                   SSL_R_TLSV1_ALERT_DECRYPTION_FAILED);
++            goto f_err;
++        }
+ 
+         /*
+          * decrypt_len should be SSL_MAX_MASTER_KEY_LENGTH. decrypt_good will
