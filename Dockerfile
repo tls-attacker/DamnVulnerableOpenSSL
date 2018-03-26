@@ -15,8 +15,8 @@ RUN make -s && make install_sw -s
 
 FROM scratch
 ARG VERSION
-LABEL "server_type"="openssl"
-LABEL "server_version"="1.0.2${VERSION}"
+LABEL "server_type"="damnvulnerableopenssl"
+LABEL "server_version"="1.0"
 COPY --from=openssl /lib/ld-musl-x86_64.so.* \
   /usr/lib/libstdc++.so.* \
   /usr/lib/libgcc_s.so.* \
