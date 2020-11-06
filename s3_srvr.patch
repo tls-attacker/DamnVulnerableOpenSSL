@@ -17,3 +17,16 @@
  
          /*
           * decrypt_len should be SSL_MAX_MASTER_KEY_LENGTH. decrypt_good will
+@@ -2410,8 +2418,10 @@
+         }
+ 
+         i = DH_compute_key(p, pub, dh_srvr);
+-
+-        if (i <= 0) {
++        
++        printf("shared s: %02x %02x %02x %02x ...\n", p[0], p[1], p[2], p[3]);
++        
++        if (i != BN_num_bytes(dh_srvr->p)) {
+             al = SSL_AD_HANDSHAKE_FAILURE;
+             SSLerr(SSL_F_SSL3_GET_CLIENT_KEY_EXCHANGE, ERR_R_DH_LIB);
+             BN_clear_free(pub);
