@@ -12,7 +12,12 @@
 +            al = SSL_AD_HANDSHAKE_FAILURE;
 +            SSLerr(SSL_F_SSL3_GET_CLIENT_KEY_EXCHANGE,
 +                   SSL_R_TLSV1_ALERT_DECRYPTION_FAILED);
-+            goto f_err;
++           // ssl3_send_alert(s, SSL3_AL_FATAL, SSL_AD_HANDSHAKE_FAILURE);
++           goto f_err;
++        } else {
++            printf("Sleeping\n");
++            sleep(1);
++            return (-1);
 +        }
  
          /*
