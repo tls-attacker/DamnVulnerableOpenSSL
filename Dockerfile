@@ -16,8 +16,9 @@ RUN /build/bin/openssl req -new -newkey rsa:2048 -days 365 -nodes -x509 -subj "/
 
 FROM scratch
 ARG VERSION
-LABEL "server_type"="damnvulnerableopenssl"
-LABEL "server_version"="1.0"
+LABEL "tls_implementation"="damnvulnerableopenssl"
+LABEL "tls_implementation_version"="1.0"
+LABEL "tls_implementation_connectionRole"="server"
 COPY --from=openssl \
   /lib/x86_64-linux-gnu/libdl.so.* \
   /lib/x86_64-linux-gnu/libc.so.* \
