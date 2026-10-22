@@ -1,12 +1,13 @@
-FROM atlassian/default-image:2 as openssl
+FROM atlassian/default-image:2.19 AS openssl
 RUN wget -O openssl.tar.gz https://www.openssl.org/source/old/1.0.2/openssl-1.0.2l.tar.gz
 RUN mkdir openssl
 RUN tar -xzf openssl.tar.gz -C openssl --strip-components 1
 
-ADD s3_srvr.patch s3_srvr.patch
+WORKDIR /opt/atlassian/bitbucketci/agent/build
+COPY s3_srvr.patch s3_srvr.patch
 RUN patch openssl/ssl/s3_srvr.c s3_srvr.patch
 
-ADD e_aes_cbc_hmac_sha1.patch e_aes_cbc_hmac_sha1.patch
+COPY e_aes_cbc_hmac_sha1.patch e_aes_cbc_hmac_sha1.patch
 RUN patch openssl/crypto/evp/e_aes_cbc_hmac_sha1.c e_aes_cbc_hmac_sha1.patch
 
 WORKDIR /opt/atlassian/bitbucketci/agent/build/openssl
@@ -15,7 +16,6 @@ RUN make -s && make install_sw -s
 RUN /build/bin/openssl req -new -newkey rsa:2048 -days 365 -nodes -x509 -subj "/C=DE/ST=Denial/L=Springfield/O=Dis/CN=vulnerable.com" -keyout /server.key  -out /server.cert
 
 FROM scratch
-ARG VERSION
 LABEL "tls_implementation"="damnvulnerableopenssl"
 LABEL "tls_implementation_version"="1.0"
 LABEL "tls_implementation_connectionRole"="server"
